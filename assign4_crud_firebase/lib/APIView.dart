@@ -27,7 +27,7 @@ class APIView extends StatefulWidget {
   @override
   State<APIView> createState() => _APIViewState();
 }
-final ref = FirebaseDatabase.instance.ref().child('Productss');
+final ref = FirebaseDatabase.instance.ref().child('Student');
 
 class _APIViewState extends State<APIView> {
 
@@ -48,12 +48,13 @@ class _APIViewState extends State<APIView> {
   }
 
 
-  Widget listItem({required Map Products}){
-    String ke = Products['key'];
+  Widget listItem({required Map Students}){
+    String ke = Students['key'];
     return Slidable(
       key: ValueKey(ke),
       startActionPane: ActionPane(
         dismissible: DismissiblePane(onDismissed: (){
+          ref.child(Students['key']).remove();
         },),
         motion: const DrawerMotion(),
         children: [
@@ -96,12 +97,12 @@ class _APIViewState extends State<APIView> {
               RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                      text: "Title: ",
+                      text: "Name: ",
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black)),
                   TextSpan(
-                      text: Products["title"],
+                      text: Students["Name"],
                       style: const TextStyle(color: Colors.black))
                 ]),
               ),
@@ -113,12 +114,12 @@ class _APIViewState extends State<APIView> {
                 child: RichText(
                   text: TextSpan(children: [
                     TextSpan(
-                        text: "Description: ",
+                        text: "Email: ",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.black)),
                     TextSpan(
-                        text: Products["description"],
+                        text: Students["Email"],
                         style: const TextStyle(
                           color: Colors.black,
                           letterSpacing: 1.5,
@@ -136,17 +137,32 @@ class _APIViewState extends State<APIView> {
               RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                      text: "Status: ",
+                      text: "Contact No: ",
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black)),
                   TextSpan(
-                      text: Products["status"],
+                      text: Students["Contact No"],
                       style: const TextStyle(color: Colors.black))
                 ]),
               ),
             ]),
             SizedBox(height: 12),
+            Row(children: [
+              // wrap below Text widget with textrich widget to make it bold
+              RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                      text: "Gender: ",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black)),
+                  TextSpan(
+                      text: Students["Gender"],
+                      style: const TextStyle(color: Colors.black))
+                ]),
+              ),
+            ]),
           ],
         ),
       ),
@@ -177,9 +193,9 @@ class _APIViewState extends State<APIView> {
           query: ref,
           itemBuilder: (BuildContext context,DataSnapshot snapshot,
           Animation<double>animation,int index){
-            Map Productss = snapshot.value as Map;
-            Productss['key'] = snapshot.key;
-            return listItem(Products: Productss);
+            Map Students = snapshot.value as Map;
+            Students['key'] = snapshot.key;
+            return listItem(Students: Students);
           }
         )
       ),

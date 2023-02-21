@@ -15,6 +15,10 @@ class _EditRecordState extends State<EditRecord> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final statusController = TextEditingController();
+  final genderController = TextEditingController();
+  String _selectedGender = "";
+
+  final List<String> _genderOptions = ['Male', 'Female', 'Not-known', 'Other'];
 
   late DatabaseReference dbRef;
 
@@ -22,7 +26,7 @@ class _EditRecordState extends State<EditRecord> {
   void initState() {
     super.initState();
     //Get.back();
-    dbRef = FirebaseDatabase.instance.ref().child('Productss');
+    dbRef = FirebaseDatabase.instance.ref().child('Student');
     getProductData();
   }
 
@@ -30,11 +34,12 @@ class _EditRecordState extends State<EditRecord> {
     DataSnapshot snapshot = await dbRef.child(widget.Productkey).get();
     Map student = snapshot.value as Map;
     //String a = '${widget.studentKey}/title';
-    print(student['title']);
+    print(student['Name']);
     print("asdasda");
-    titleController.text = student['title'];
-    descriptionController.text = student['description'];
-    statusController.text = student['status'];
+    titleController.text = student['Name'];
+    descriptionController.text = student['Email'];
+    statusController.text = student['Contact No'];
+    genderController.text = student['Gender'];
   }
 
   Widget ShowUpdateDialog(
@@ -57,7 +62,7 @@ class _EditRecordState extends State<EditRecord> {
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Title',
+                  labelText: 'Name',
                 ),
               ),
             ),
@@ -72,7 +77,7 @@ class _EditRecordState extends State<EditRecord> {
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Description',
+                  labelText: 'Email',
                   //hintText: 'Enter Your Age',
                 ),
               ),
@@ -87,7 +92,7 @@ class _EditRecordState extends State<EditRecord> {
                 keyboardType: TextInputType.text,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  labelText: 'Status',
+                  labelText: 'Contact No',
                   //hintText: 'Enter Your Salary',
                 ),
               ),
@@ -97,12 +102,38 @@ class _EditRecordState extends State<EditRecord> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+              child: DropdownButtonFormField<String>(
+                decoration: const InputDecoration(
+                  labelText: 'Gender',
+                  border: OutlineInputBorder(),
+                ),
+                value: genderController.text.isNotEmpty
+                    ? genderController.text
+                    : null,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedGender = value!;
+                    genderController.text = value;
+                  });
+                },
+                items: _genderOptions
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0),
               child: MaterialButton(
                 onPressed: () {
                   Map<String, String> products = {
-                    'title': titleController.text,
-                    'description': descriptionController.text,
-                    'status': statusController.text
+                    'Name': titleController.text,
+                    'Email': descriptionController.text,
+                    'Contact No': statusController.text,
+                    'Gender' : genderController.text
                   };
 
                   dbRef

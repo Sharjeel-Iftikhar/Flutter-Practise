@@ -22,12 +22,15 @@ class _InsertRecordState extends State<InsertRecord> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   final statusController = TextEditingController();
+  final genderController = TextEditingController();
+  String _selectedGender = "";
+  final List<String> _genderOptions = ['Male', 'Female', 'Not-known', 'Other'];
 
   late DatabaseReference dbRef;
   @override
   void initState() {
     super.initState();
-    dbRef = FirebaseDatabase.instance.ref().child('Productss');
+    dbRef = FirebaseDatabase.instance.ref().child('Student');
   }
 
   @override
@@ -64,8 +67,8 @@ class _InsertRecordState extends State<InsertRecord> {
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Title',
-                    hintText: 'Enter Title of Service',
+                    labelText: 'Name',
+                    hintText: 'Enter Name',
                   ),
                 ),
                 const SizedBox(
@@ -76,8 +79,8 @@ class _InsertRecordState extends State<InsertRecord> {
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Description',
-                    hintText: 'Enter Description',
+                    labelText: 'Email',
+                    hintText: 'Enter Email',
                   ),
                 ),
                 const SizedBox(
@@ -88,19 +91,40 @@ class _InsertRecordState extends State<InsertRecord> {
                   keyboardType: TextInputType.text,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Status',
-                    hintText: 'Enter status',
+                    labelText: 'Contact No',
+                    hintText: 'Enter contactNo',
                   ),
                 ),
                 const SizedBox(
                   height: 30,
                 ),
+                DropdownButtonFormField<String>(
+                  decoration: const InputDecoration(
+                    labelText: 'Gender',
+                    border: OutlineInputBorder(),
+                  ),
+                  value: _selectedGender.isNotEmpty ? _selectedGender : null,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedGender = value!;
+                      genderController.text = value;
+                    });
+                  },
+                  items: _genderOptions
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
                 MaterialButton(
                   onPressed: () {
                     Map<String, String> products = {
-                      'title': titleController.text,
-                      'description': descriptionController.text,
-                      'status': statusController.text
+                      'Name': titleController.text,
+                      'Email': descriptionController.text,
+                      'Contact No': statusController.text,
+                      'Gender': genderController.text
                     };
 
                     dbRef.push().set(products);
