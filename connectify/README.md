@@ -1,6 +1,6 @@
-# chatapp
+# connectify
 
-Flutter chat app  project.
+A new Flutter project.
 
 ## Getting Started
 

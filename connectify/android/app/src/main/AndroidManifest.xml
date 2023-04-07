@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.chatapp">
+    package="com.example.connectify">
    <application
-        android:label="chatapp"
+        android:label="connectify"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
